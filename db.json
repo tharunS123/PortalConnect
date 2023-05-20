@@ -1,16 +1,23 @@
 {
   "user": [
     {
-      "id": "admin",
-      "name": "NT Infotech",
-      "password": "Test$1234",
-      "email": "test@gmail.com",
+      "id": "Admin",
+      "name": "Tharun",
+      "password": "Admin12!@",
+      "email": "admin@gmail.com",
       "gender": "male",
       "role": "admin",
       "isactive": true,
       "address": {
         "area": "chennai"
       }
+    }
+  ],
+  "customer": [
+    {
+      "id": 1,
+      "name": "Sanjay",
+      "Creditlimit": 500
     }
   ],
   "role": [
@@ -61,13 +68,6 @@
       "haveedit": true,
       "haveadd": true,
       "havedelete": false
-    }
-  ],
-  "customer": [
-    {
-      "id": 1,
-      "name": "rakhesh",
-      "Creditlimit": 1000
     }
   ]
 }
