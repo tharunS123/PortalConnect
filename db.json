@@ -11,6 +11,15 @@
       "address": {
         "area": "chennai"
       }
+    },
+    {
+      "id": "Usertharun",
+      "name": "tharun",
+      "password": "User123!@#",
+      "email": "user@gmail.com",
+      "gender": "male",
+      "role": "user",
+      "isactive": true
     }
   ],
   "customer": [
