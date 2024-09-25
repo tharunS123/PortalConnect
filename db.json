@@ -18,6 +18,15 @@
       "password": "User123!@#",
       "email": "user@gmail.com",
       "gender": "male",
+      "role": "tech",
+      "isactive": false
+    },
+    {
+      "id": "Alex_40",
+      "name": "Alex Kumar",
+      "password": "Tharun12!@",
+      "email": "alexkumar@gmail.com",
+      "gender": "male",
       "role": "user",
       "isactive": true
     }
