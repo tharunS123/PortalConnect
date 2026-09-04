@@ -1,0 +1,104 @@
+<mat-sidenav-container class="shell" [class.shell--handset]="isHandset()">
+  <mat-sidenav
+    class="shell__drawer"
+    [mode]="isHandset() ? 'over' : 'side'"
+    [opened]="drawerOpen()"
+    (closedStart)="drawerOpen.set(false)"
+  >
+    <div class="shell__brand">
+      <mat-icon class="shell__brand-mark" fontSet="material-icons-outlined">hub</mat-icon>
+      <div class="shell__brand-text">
+        <span class="shell__brand-name">PortalConnect</span>
+        <span class="shell__brand-sub">Access management</span>
+      </div>
+    </div>
+
+    <mat-nav-list class="shell__nav">
+      @for (item of navItems(); track item.route) {
+        <a
+          mat-list-item
+          [routerLink]="item.route"
+          routerLinkActive
+          #link="routerLinkActive"
+          [activated]="link.isActive"
+          (click)="onNavigate()"
+        >
+          <mat-icon matListItemIcon fontSet="material-icons-outlined">{{ item.icon }}</mat-icon>
+          <span matListItemTitle>{{ item.label }}</span>
+        </a>
+      }
+    </mat-nav-list>
+
+    <div class="pc-spacer"></div>
+
+    <mat-divider />
+
+    <div class="shell__account">
+      <div class="shell__avatar" aria-hidden="true">{{ initials() }}</div>
+      <div class="shell__account-text">
+        <span class="shell__account-name">{{ user()?.name }}</span>
+        <span class="shell__account-role">{{ roleLabel() }}</span>
+      </div>
+    </div>
+  </mat-sidenav>
+
+  <mat-sidenav-content class="shell__content">
+    <mat-toolbar class="shell__toolbar">
+      <button
+        mat-icon-button
+        type="button"
+        (click)="toggleDrawer()"
+        [attr.aria-label]="drawerOpen() ? 'Close navigation' : 'Open navigation'"
+      >
+        <mat-icon fontSet="material-icons-outlined">menu</mat-icon>
+      </button>
+
+      <span class="shell__title">{{
+        user()?.name ? 'Welcome, ' + user()?.name : 'PortalConnect'
+      }}</span>
+
+      <span class="pc-spacer"></span>
+
+      <button
+        mat-icon-button
+        type="button"
+        (click)="theme.toggle()"
+        [matTooltip]="theme.isDark() ? 'Switch to light theme' : 'Switch to dark theme'"
+        [attr.aria-label]="theme.isDark() ? 'Switch to light theme' : 'Switch to dark theme'"
+      >
+        <mat-icon fontSet="material-icons-outlined">
+          {{ theme.isDark() ? 'light_mode' : 'dark_mode' }}
+        </mat-icon>
+      </button>
+
+      <button
+        mat-icon-button
+        type="button"
+        [matMenuTriggerFor]="accountMenu"
+        aria-label="Account menu"
+      >
+        <mat-icon fontSet="material-icons-outlined">account_circle</mat-icon>
+      </button>
+
+      <mat-menu #accountMenu="matMenu">
+        <div class="shell__menu-header">
+          <strong>{{ user()?.name }}</strong>
+          <small>{{ user()?.email }}</small>
+        </div>
+        <mat-divider />
+        <a mat-menu-item routerLink="/profile">
+          <mat-icon fontSet="material-icons-outlined">person</mat-icon>
+          <span>My profile</span>
+        </a>
+        <button mat-menu-item type="button" (click)="logout()">
+          <mat-icon fontSet="material-icons-outlined">logout</mat-icon>
+          <span>Sign out</span>
+        </button>
+      </mat-menu>
+    </mat-toolbar>
+
+    <main class="shell__main">
+      <router-outlet />
+    </main>
+  </mat-sidenav-content>
+</mat-sidenav-container>

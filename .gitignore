@@ -1,15 +1,29 @@
-# See http://help.github.com/ignore-files/ for more about ignoring files.
-
 # Compiled output
 /dist
+/server/dist
+*.tsbuildinfo
 /tmp
 /out-tsc
 /bazel-out
 
-# Node
-/node_modules
+# Node — unanchored so workspace package dirs (server/node_modules) match too
+node_modules/
 npm-debug.log
 yarn-error.log
+.npm
+.vite/
+
+# Environment / secrets — never commit these
+.env
+.env.*
+!.env.example
+
+# Local database files
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+/server/data
 
 # IDEs and editors
 .idea/

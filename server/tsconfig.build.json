@@ -1,0 +1,9 @@
+/* Build-only project: emits `src` and leaves tests out of `dist`. */
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "src"
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["dist", "node_modules", "tests", "vitest.config.ts"]
+}

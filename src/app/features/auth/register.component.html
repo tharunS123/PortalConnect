@@ -1,0 +1,118 @@
+<div class="auth">
+  <section class="auth__panel" aria-hidden="true">
+    <mat-icon class="auth__panel-mark" fontSet="material-icons-outlined">hub</mat-icon>
+    <h1 class="auth__panel-title">Join PortalConnect</h1>
+    <p class="auth__panel-copy">
+      Create your account. An administrator activates it and assigns your role before you can sign
+      in.
+    </p>
+  </section>
+
+  <mat-card class="auth__card" appearance="outlined">
+    @if (submitting()) {
+      <mat-progress-bar mode="indeterminate" />
+    }
+
+    <mat-card-header class="auth__header">
+      <mat-card-title>Create account</mat-card-title>
+      <mat-card-subtitle>It takes less than a minute</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      @if (errorMessage(); as message) {
+        <p class="auth__error" role="alert">
+          <mat-icon fontSet="material-icons-outlined">error_outline</mat-icon>
+          <span>{{ message }}</span>
+        </p>
+      }
+
+      <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+        <mat-form-field>
+          <mat-label>Username</mat-label>
+          <input
+            matInput
+            formControlName="username"
+            autocomplete="username"
+            autocapitalize="none"
+            spellcheck="false"
+            required
+          />
+          @if (form.controls.username.touched && form.controls.username.invalid) {
+            <mat-error>
+              @if (form.controls.username.hasError('required')) {
+                Username is required
+              } @else if (form.controls.username.hasError('minlength')) {
+                Use at least 3 characters
+              } @else {
+                Letters, digits, dot, underscore and hyphen only
+              }
+            </mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Full name</mat-label>
+          <input matInput formControlName="name" autocomplete="name" required />
+          @if (form.controls.name.touched && form.controls.name.hasError('required')) {
+            <mat-error>Name is required</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Email</mat-label>
+          <input matInput type="email" formControlName="email" autocomplete="email" required />
+          @if (form.controls.email.touched && form.controls.email.invalid) {
+            <mat-error>Enter a valid email address</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Password</mat-label>
+          <input
+            matInput
+            [type]="showPassword() ? 'text' : 'password'"
+            formControlName="password"
+            autocomplete="new-password"
+            required
+          />
+          <button
+            matIconSuffix
+            mat-icon-button
+            type="button"
+            (click)="showPassword.set(!showPassword())"
+            [attr.aria-label]="showPassword() ? 'Hide password' : 'Show password'"
+            [attr.aria-pressed]="showPassword()"
+          >
+            <mat-icon fontSet="material-icons-outlined">
+              {{ showPassword() ? 'visibility_off' : 'visibility' }}
+            </mat-icon>
+          </button>
+        </mat-form-field>
+
+        <ul class="auth__requirements">
+          @for (rule of passwordRules(); track rule.label) {
+            <li [class.met]="rule.met">{{ rule.label }}</li>
+          }
+        </ul>
+
+        <mat-form-field>
+          <mat-label>Gender</mat-label>
+          <mat-select formControlName="gender">
+            @for (option of genders; track option.value) {
+              <mat-option [value]="option.value">{{ option.label }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <button mat-flat-button type="submit" class="auth__submit" [disabled]="submitting()">
+          {{ submitting() ? 'Creating account…' : 'Create account' }}
+        </button>
+      </form>
+    </mat-card-content>
+
+    <mat-card-actions class="auth__actions">
+      <span>Already registered?</span>
+      <a mat-button routerLink="/login">Sign in</a>
+    </mat-card-actions>
+  </mat-card>
+</div>

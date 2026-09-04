@@ -1,0 +1,79 @@
+.list__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--pc-space-md);
+}
+
+.list__title {
+  margin: 0;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 400;
+}
+
+.list__subtitle {
+  margin: var(--pc-space-xs) 0 0;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.list__card {
+  border-radius: var(--pc-radius-md);
+  overflow: hidden;
+}
+
+.list__filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--pc-space-md);
+  padding: var(--pc-space-md) var(--pc-space-md) 0;
+}
+
+.list__search {
+  flex: 2 1 260px;
+}
+
+.list__filter {
+  flex: 1 1 160px;
+}
+
+.list__error {
+  margin: 0 var(--pc-space-md);
+  padding: var(--pc-space-sm) var(--pc-space-md);
+  border-radius: var(--pc-radius-sm);
+  background: var(--mat-sys-error-container);
+  color: var(--mat-sys-on-error-container);
+}
+
+/* Wide tables scroll inside the card rather than pushing the page sideways. */
+.list__table-wrap {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  min-width: 720px;
+}
+
+.cell-primary {
+  font-weight: 500;
+}
+
+.cell-actions {
+  width: 72px;
+  text-align: right;
+}
+
+.list__empty {
+  padding: var(--pc-space-xl) var(--pc-space-md);
+  text-align: center;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+code {
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: var(--mat-sys-surface-variant);
+  font-size: 0.8rem;
+}

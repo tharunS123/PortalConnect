@@ -1,0 +1,93 @@
+<div class="auth">
+  <button
+    mat-icon-button
+    type="button"
+    class="auth__theme-toggle"
+    (click)="theme.toggle()"
+    [attr.aria-label]="theme.isDark() ? 'Switch to light theme' : 'Switch to dark theme'"
+  >
+    <mat-icon fontSet="material-icons-outlined">
+      {{ theme.isDark() ? 'light_mode' : 'dark_mode' }}
+    </mat-icon>
+  </button>
+
+  <section class="auth__panel" aria-hidden="true">
+    <mat-icon class="auth__panel-mark" fontSet="material-icons-outlined">hub</mat-icon>
+    <h1 class="auth__panel-title">PortalConnect</h1>
+    <p class="auth__panel-copy">
+      Role-based access to your people and your customers, in one place.
+    </p>
+  </section>
+
+  <mat-card class="auth__card" appearance="outlined">
+    @if (submitting()) {
+      <mat-progress-bar mode="indeterminate" />
+    }
+
+    <mat-card-header class="auth__header">
+      <mat-card-title>Sign in</mat-card-title>
+      <mat-card-subtitle>Use your PortalConnect credentials</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      @if (errorMessage(); as message) {
+        <p class="auth__error" role="alert">
+          <mat-icon fontSet="material-icons-outlined">error_outline</mat-icon>
+          <span>{{ message }}</span>
+        </p>
+      }
+
+      <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+        <mat-form-field>
+          <mat-label>Username</mat-label>
+          <input
+            matInput
+            formControlName="username"
+            autocomplete="username"
+            autocapitalize="none"
+            spellcheck="false"
+            required
+          />
+          @if (form.controls.username.hasError('required') && form.controls.username.touched) {
+            <mat-error>Username is required</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Password</mat-label>
+          <input
+            matInput
+            [type]="showPassword() ? 'text' : 'password'"
+            formControlName="password"
+            autocomplete="current-password"
+            required
+          />
+          <button
+            matIconSuffix
+            mat-icon-button
+            type="button"
+            (click)="showPassword.set(!showPassword())"
+            [attr.aria-label]="showPassword() ? 'Hide password' : 'Show password'"
+            [attr.aria-pressed]="showPassword()"
+          >
+            <mat-icon fontSet="material-icons-outlined">
+              {{ showPassword() ? 'visibility_off' : 'visibility' }}
+            </mat-icon>
+          </button>
+          @if (form.controls.password.hasError('required') && form.controls.password.touched) {
+            <mat-error>Password is required</mat-error>
+          }
+        </mat-form-field>
+
+        <button mat-flat-button type="submit" class="auth__submit" [disabled]="submitting()">
+          {{ submitting() ? 'Signing in…' : 'Sign in' }}
+        </button>
+      </form>
+    </mat-card-content>
+
+    <mat-card-actions class="auth__actions">
+      <span>New to PortalConnect?</span>
+      <a mat-button routerLink="/register">Create an account</a>
+    </mat-card-actions>
+  </mat-card>
+</div>

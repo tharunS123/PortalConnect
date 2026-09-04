@@ -1,0 +1,164 @@
+<div class="pc-page">
+  <header class="list__header">
+    <div>
+      <h1 class="list__title">Users</h1>
+      <p class="list__subtitle">Activate accounts and assign the roles that grant access.</p>
+    </div>
+  </header>
+
+  <mat-card appearance="outlined" class="list__card">
+    @if (loading()) {
+      <mat-progress-bar mode="indeterminate" />
+    }
+
+    <div class="list__filters">
+      <mat-form-field class="list__search">
+        <mat-label>Search</mat-label>
+        <input
+          matInput
+          type="search"
+          [formControl]="searchControl"
+          (input)="onFilterChange()"
+          placeholder="Name, username or email"
+        />
+        <mat-icon matPrefix fontSet="material-icons-outlined">search</mat-icon>
+      </mat-form-field>
+
+      <mat-form-field class="list__filter">
+        <mat-label>Role</mat-label>
+        <mat-select [value]="roleFilter()" (valueChange)="roleFilter.set($event); onFilterChange()">
+          <mat-option value="">All roles</mat-option>
+          @for (role of roles.value(); track role.code) {
+            <mat-option [value]="role.code">{{ role.name }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field class="list__filter">
+        <mat-label>Status</mat-label>
+        <mat-select
+          [value]="statusFilter()"
+          (valueChange)="statusFilter.set($event); onFilterChange()"
+        >
+          <mat-option value="">All</mat-option>
+          <mat-option value="true">Active</mat-option>
+          <mat-option value="false">Awaiting activation</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <button mat-stroked-button type="button" (click)="clearFilters()">Reset</button>
+    </div>
+
+    @if (loadError(); as message) {
+      <p class="list__error" role="alert">{{ message }}</p>
+    }
+
+    <div class="list__table-wrap">
+      <table mat-table [dataSource]="rows()" matSort (matSortChange)="onSort($event)">
+        <ng-container matColumnDef="name">
+          <th mat-header-cell mat-sort-header="name" *matHeaderCellDef>Name</th>
+          <td mat-cell *matCellDef="let user">
+            <div class="cell-primary">{{ user.name }}</div>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="username">
+          <th mat-header-cell mat-sort-header="username" *matHeaderCellDef>Username</th>
+          <td mat-cell *matCellDef="let user">
+            <code>{{ user.username }}</code>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="email">
+          <th mat-header-cell mat-sort-header="email" *matHeaderCellDef>Email</th>
+          <td mat-cell *matCellDef="let user">{{ user.email }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="role">
+          <th mat-header-cell *matHeaderCellDef>Role</th>
+          <td mat-cell *matCellDef="let user">{{ roleLabel(user.role) }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef>Status</th>
+          <td mat-cell *matCellDef="let user">
+            <app-status-chip
+              [tone]="user.isActive ? 'active' : 'inactive'"
+              [text]="user.isActive ? 'Active' : 'Pending'"
+            />
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="lastLogin">
+          <th mat-header-cell *matHeaderCellDef>Last sign-in</th>
+          <td mat-cell *matCellDef="let user">
+            {{ user.lastLoginAt ? (user.lastLoginAt | date: 'medium') : 'Never' }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef class="cell-actions">Actions</th>
+          <td mat-cell *matCellDef="let user" class="cell-actions">
+            <button
+              mat-icon-button
+              type="button"
+              [matMenuTriggerFor]="rowMenu"
+              [attr.aria-label]="'Actions for ' + user.username"
+            >
+              <mat-icon fontSet="material-icons-outlined">more_vert</mat-icon>
+            </button>
+
+            <mat-menu #rowMenu="matMenu">
+              @if (canEdit()) {
+                <button mat-menu-item type="button" (click)="edit(user)">
+                  <mat-icon fontSet="material-icons-outlined">edit</mat-icon>
+                  <span>Edit details</span>
+                </button>
+                <button mat-menu-item type="button" (click)="toggleActive(user)">
+                  <mat-icon fontSet="material-icons-outlined">
+                    {{ user.isActive ? 'block' : 'check_circle' }}
+                  </mat-icon>
+                  <span>{{ user.isActive ? 'Deactivate' : 'Activate' }}</span>
+                </button>
+              }
+              @if (canDelete()) {
+                <button
+                  mat-menu-item
+                  type="button"
+                  (click)="remove(user)"
+                  [disabled]="user.id === currentUserId()"
+                >
+                  <mat-icon fontSet="material-icons-outlined">delete</mat-icon>
+                  <span>Delete</span>
+                </button>
+              }
+            </mat-menu>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns()"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns()"></tr>
+
+        <tr class="mat-row" *matNoDataRow>
+          <td class="list__empty" [attr.colspan]="displayedColumns().length">
+            @if (loading()) {
+              Loading users…
+            } @else {
+              No users match these filters.
+            }
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <mat-paginator
+      [length]="total()"
+      [pageIndex]="pageIndex()"
+      [pageSize]="pageSize()"
+      [pageSizeOptions]="[10, 25, 50]"
+      showFirstLastButtons
+      (page)="onPage($event)"
+      aria-label="Select page of users"
+    />
+  </mat-card>
+</div>

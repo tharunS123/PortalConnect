@@ -1,0 +1,68 @@
+@if (saving()) {
+  <mat-progress-bar mode="indeterminate" />
+}
+
+<h2 mat-dialog-title>{{ isEdit ? 'Edit customer' : 'New customer' }}</h2>
+
+<mat-dialog-content>
+  @if (errorMessage(); as message) {
+    <p class="error" role="alert">{{ message }}</p>
+  }
+
+  <form [formGroup]="form" (ngSubmit)="save()" novalidate id="customer-form">
+    <mat-form-field>
+      <mat-label>Customer name</mat-label>
+      <input matInput formControlName="name" required />
+      @if (form.controls.name.touched && form.controls.name.invalid) {
+        <mat-error>Name is required</mat-error>
+      }
+    </mat-form-field>
+
+    <div class="row">
+      <mat-form-field>
+        <mat-label>Email</mat-label>
+        <input matInput type="email" formControlName="email" />
+        @if (form.controls.email.touched && form.controls.email.invalid) {
+          <mat-error>Enter a valid email address</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Phone</mat-label>
+        <input matInput formControlName="phone" />
+      </mat-form-field>
+    </div>
+
+    <div class="row">
+      <mat-form-field>
+        <mat-label>Credit limit</mat-label>
+        <input matInput type="number" min="0" step="100" formControlName="creditLimit" required />
+        <span matTextPrefix>$&nbsp;</span>
+        @if (form.controls.creditLimit.touched && form.controls.creditLimit.invalid) {
+          <mat-error>Enter a value of 0 or more</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Status</mat-label>
+        <mat-select formControlName="status">
+          @for (option of statuses; track option.value) {
+            <mat-option [value]="option.value">{{ option.label }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <mat-form-field>
+      <mat-label>Notes</mat-label>
+      <textarea matInput rows="3" formControlName="notes"></textarea>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button type="button" (click)="dialogRef.close()">Cancel</button>
+  <button mat-flat-button type="submit" form="customer-form" [disabled]="saving()">
+    {{ saving() ? 'Saving…' : isEdit ? 'Save changes' : 'Create customer' }}
+  </button>
+</mat-dialog-actions>
