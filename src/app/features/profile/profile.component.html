@@ -1,0 +1,123 @@
+<div class="pc-page profile">
+  <header>
+    <h1 class="profile__title">My profile</h1>
+    <p class="profile__subtitle">Your details and sign-in security.</p>
+  </header>
+
+  <div class="profile__grid">
+    <mat-card appearance="outlined">
+      <mat-card-header>
+        <mat-card-title>Details</mat-card-title>
+      </mat-card-header>
+
+      <mat-card-content>
+        <form [formGroup]="profileForm" (ngSubmit)="saveProfile()" novalidate>
+          <mat-form-field>
+            <mat-label>Username</mat-label>
+            <input matInput [value]="user()?.username ?? ''" disabled />
+            <mat-hint>Usernames cannot be changed.</mat-hint>
+          </mat-form-field>
+
+          <mat-form-field>
+            <mat-label>Full name</mat-label>
+            <input matInput formControlName="name" autocomplete="name" required />
+            @if (profileForm.controls.name.touched && profileForm.controls.name.invalid) {
+              <mat-error>Name is required</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field>
+            <mat-label>Email</mat-label>
+            <input matInput type="email" formControlName="email" autocomplete="email" required />
+            @if (profileForm.controls.email.touched && profileForm.controls.email.invalid) {
+              <mat-error>Enter a valid email address</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field>
+            <mat-label>Gender</mat-label>
+            <mat-select formControlName="gender">
+              @for (option of genders; track option.value) {
+                <mat-option [value]="option.value">{{ option.label }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+
+          <button mat-flat-button type="submit" [disabled]="savingProfile()">
+            {{ savingProfile() ? 'Saving…' : 'Save details' }}
+          </button>
+        </form>
+      </mat-card-content>
+    </mat-card>
+
+    <div class="profile__column">
+      <mat-card appearance="outlined">
+        <mat-card-header>
+          <mat-card-title>Account</mat-card-title>
+        </mat-card-header>
+
+        <mat-card-content>
+          <dl class="profile__facts">
+            <dt>Role</dt>
+            <dd>{{ user()?.role ?? 'Unassigned' }}</dd>
+
+            <dt>Status</dt>
+            <dd>{{ user()?.isActive ? 'Active' : 'Awaiting activation' }}</dd>
+
+            <dt>Last sign-in</dt>
+            <dd>
+              {{ user()?.lastLoginAt ? (user()!.lastLoginAt | date: 'medium') : 'This session' }}
+            </dd>
+
+            <dt>Member since</dt>
+            <dd>{{ user()?.createdAt | date: 'mediumDate' }}</dd>
+          </dl>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card appearance="outlined">
+        <mat-card-header>
+          <mat-card-title>Change password</mat-card-title>
+          <mat-card-subtitle>Signs you out of every device</mat-card-subtitle>
+        </mat-card-header>
+
+        <mat-card-content>
+          @if (passwordError(); as message) {
+            <p class="profile__error" role="alert">{{ message }}</p>
+          }
+
+          <form [formGroup]="passwordForm" (ngSubmit)="changePassword()" novalidate>
+            <mat-form-field>
+              <mat-label>Current password</mat-label>
+              <input
+                matInput
+                type="password"
+                formControlName="currentPassword"
+                autocomplete="current-password"
+                required
+              />
+            </mat-form-field>
+
+            <mat-form-field>
+              <mat-label>New password</mat-label>
+              <input
+                matInput
+                type="password"
+                formControlName="newPassword"
+                autocomplete="new-password"
+                required
+              />
+              <mat-hint>
+                At least 12 characters with upper and lower case, a digit and a symbol.
+              </mat-hint>
+            </mat-form-field>
+
+            <button mat-stroked-button type="submit" [disabled]="savingPassword()">
+              {{ savingPassword() ? 'Updating…' : 'Change password' }}
+            </button>
+          </form>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>

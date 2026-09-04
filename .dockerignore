@@ -1,0 +1,14 @@
+node_modules
+dist
+server/dist
+.angular
+.git
+.github
+coverage
+*.log
+.env
+.env.*
+!.env.example
+*.db
+*.db-journal
+server/data

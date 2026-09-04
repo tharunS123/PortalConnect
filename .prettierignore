@@ -1,0 +1,8 @@
+dist
+server/dist
+.angular
+coverage
+node_modules
+package-lock.json
+*.db
+*.db-journal

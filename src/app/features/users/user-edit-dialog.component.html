@@ -1,0 +1,50 @@
+@if (saving()) {
+  <mat-progress-bar mode="indeterminate" />
+}
+
+<h2 mat-dialog-title>Edit {{ data.user.username }}</h2>
+
+<mat-dialog-content>
+  @if (errorMessage(); as message) {
+    <p class="hint" role="alert" style="color: var(--mat-sys-error)">{{ message }}</p>
+  }
+
+  <form [formGroup]="form" (ngSubmit)="save()" novalidate id="user-edit-form">
+    <mat-form-field>
+      <mat-label>Full name</mat-label>
+      <input matInput formControlName="name" required />
+      @if (form.controls.name.touched && form.controls.name.invalid) {
+        <mat-error>Name is required</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Email</mat-label>
+      <input matInput type="email" formControlName="email" required />
+      @if (form.controls.email.touched && form.controls.email.invalid) {
+        <mat-error>Enter a valid email address</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Role</mat-label>
+      <mat-select formControlName="role">
+        <mat-option value="">Unassigned</mat-option>
+        @for (role of data.roles; track role.code) {
+          <mat-option [value]="role.code">{{ role.name }}</mat-option>
+        }
+      </mat-select>
+      <mat-hint>Determines which modules this person can reach.</mat-hint>
+    </mat-form-field>
+
+    <mat-slide-toggle class="toggle" formControlName="isActive">Account active</mat-slide-toggle>
+    <p class="hint">Deactivating an account signs the user out of every device immediately.</p>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button type="button" (click)="dialogRef.close()">Cancel</button>
+  <button mat-flat-button type="submit" form="user-edit-form" [disabled]="saving()">
+    {{ saving() ? 'Saving…' : 'Save changes' }}
+  </button>
+</mat-dialog-actions>

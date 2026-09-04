@@ -1,0 +1,119 @@
+.shell {
+  height: 100vh;
+}
+
+.shell__drawer {
+  width: 264px;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--mat-sys-outline-variant);
+  background: var(--mat-sys-surface-container-low);
+}
+
+.shell__brand {
+  display: flex;
+  align-items: center;
+  gap: var(--pc-space-sm);
+  padding: var(--pc-space-lg) var(--pc-space-md) var(--pc-space-md);
+}
+
+.shell__brand-mark {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--pc-radius-md);
+  background: var(--mat-sys-primary);
+  color: var(--mat-sys-on-primary);
+}
+
+.shell__brand-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.shell__brand-name {
+  font-weight: 600;
+}
+
+.shell__brand-sub {
+  font-size: 0.75rem;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.shell__nav {
+  padding-inline: var(--pc-space-sm);
+}
+
+.shell__account {
+  display: flex;
+  align-items: center;
+  gap: var(--pc-space-sm);
+  padding: var(--pc-space-md);
+}
+
+.shell__avatar {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--mat-sys-secondary-container);
+  color: var(--mat-sys-on-secondary-container);
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.shell__account-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  line-height: 1.25;
+}
+
+.shell__account-name {
+  font-size: 0.875rem;
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.shell__account-role {
+  font-size: 0.75rem;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.shell__toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  gap: var(--pc-space-xs);
+  background: var(--mat-sys-surface);
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+}
+
+.shell__title {
+  font-size: 1rem;
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.shell__main {
+  display: block;
+  min-height: calc(100vh - 64px);
+  background: var(--mat-sys-surface-container-lowest);
+}
+
+.shell__menu-header {
+  display: flex;
+  flex-direction: column;
+  padding: var(--pc-space-sm) var(--pc-space-md);
+
+  small {
+    color: var(--mat-sys-on-surface-variant);
+  }
+}

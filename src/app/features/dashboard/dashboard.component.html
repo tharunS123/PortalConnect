@@ -1,0 +1,108 @@
+<div class="pc-page">
+  <header class="dashboard__header">
+    <div>
+      <h1 class="dashboard__title">{{ greeting() }}, {{ user()?.name }}</h1>
+      <p class="dashboard__subtitle">Here is what is happening across your portal.</p>
+    </div>
+
+    <button mat-stroked-button type="button" (click)="reload()" [disabled]="loading()">
+      <mat-icon fontSet="material-icons-outlined">refresh</mat-icon>
+      Refresh
+    </button>
+  </header>
+
+  @if (loading()) {
+    <div class="dashboard__loading">
+      <mat-spinner diameter="36" />
+      <span>Loading your overview…</span>
+    </div>
+  } @else {
+    <section class="dashboard__tiles" aria-label="Portal statistics">
+      @for (tile of tiles(); track tile.label) {
+        <mat-card class="tile" appearance="outlined">
+          <mat-card-content class="tile__content">
+            <span class="tile__icon">
+              <mat-icon fontSet="material-icons-outlined">{{ tile.icon }}</mat-icon>
+            </span>
+            <span class="tile__label">{{ tile.label }}</span>
+            <strong class="tile__value">{{ tile.value }}</strong>
+            <span class="tile__hint">{{ tile.hint }}</span>
+          </mat-card-content>
+        </mat-card>
+      } @empty {
+        <mat-card appearance="outlined">
+          <mat-card-content>
+            Your role does not have access to any dashboard metrics yet.
+          </mat-card-content>
+        </mat-card>
+      }
+    </section>
+
+    @if (customerStats.value(); as stats) {
+      <mat-card appearance="outlined" class="breakdown">
+        <mat-card-header>
+          <mat-card-title>Customer mix</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div
+            class="breakdown__bar"
+            role="img"
+            [attr.aria-label]="
+              stats.active +
+              ' active, ' +
+              stats.prospect +
+              ' prospect, ' +
+              stats.inactive +
+              ' inactive'
+            "
+          >
+            <span
+              class="breakdown__segment breakdown__segment--active"
+              [style.flex-grow]="stats.active"
+            ></span>
+            <span
+              class="breakdown__segment breakdown__segment--prospect"
+              [style.flex-grow]="stats.prospect"
+            ></span>
+            <span
+              class="breakdown__segment breakdown__segment--inactive"
+              [style.flex-grow]="stats.inactive"
+            ></span>
+          </div>
+          <ul class="breakdown__legend">
+            <li>
+              <i class="dot dot--active"></i>Active <strong>{{ stats.active | number }}</strong>
+            </li>
+            <li>
+              <i class="dot dot--prospect"></i>Prospect
+              <strong>{{ stats.prospect | number }}</strong>
+            </li>
+            <li>
+              <i class="dot dot--inactive"></i>Inactive
+              <strong>{{ stats.inactive | number }}</strong>
+            </li>
+          </ul>
+        </mat-card-content>
+      </mat-card>
+    }
+
+    <section class="dashboard__links" aria-label="Quick actions">
+      @if (canViewUsers()) {
+        <a mat-stroked-button routerLink="/users">
+          <mat-icon fontSet="material-icons-outlined">group</mat-icon>
+          Manage users
+        </a>
+      }
+      @if (canViewCustomers()) {
+        <a mat-stroked-button routerLink="/customers">
+          <mat-icon fontSet="material-icons-outlined">contacts</mat-icon>
+          Manage customers
+        </a>
+      }
+      <a mat-stroked-button routerLink="/profile">
+        <mat-icon fontSet="material-icons-outlined">person</mat-icon>
+        My profile
+      </a>
+    </section>
+  }
+</div>

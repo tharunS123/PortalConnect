@@ -1,0 +1,142 @@
+<div class="pc-page">
+  <header class="list__header">
+    <div>
+      <h1 class="list__title">Customers</h1>
+      <p class="list__subtitle">Accounts, credit limits and relationship status.</p>
+    </div>
+
+    @if (canCreate()) {
+      <button mat-flat-button type="button" (click)="create()">
+        <mat-icon fontSet="material-icons-outlined">add</mat-icon>
+        New customer
+      </button>
+    }
+  </header>
+
+  <mat-card appearance="outlined" class="list__card">
+    @if (loading()) {
+      <mat-progress-bar mode="indeterminate" />
+    }
+
+    <div class="list__filters">
+      <mat-form-field class="list__search">
+        <mat-label>Search</mat-label>
+        <input
+          matInput
+          type="search"
+          [formControl]="searchControl"
+          (input)="onFilterChange()"
+          placeholder="Name, email or phone"
+        />
+        <mat-icon matPrefix fontSet="material-icons-outlined">search</mat-icon>
+      </mat-form-field>
+
+      <mat-form-field class="list__filter">
+        <mat-label>Status</mat-label>
+        <mat-select
+          [value]="statusFilter()"
+          (valueChange)="statusFilter.set($event); onFilterChange()"
+        >
+          <mat-option value="">All statuses</mat-option>
+          @for (option of statuses; track option.value) {
+            <mat-option [value]="option.value">{{ option.label }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <button mat-stroked-button type="button" (click)="clearFilters()">Reset</button>
+    </div>
+
+    @if (loadError(); as message) {
+      <p class="list__error" role="alert">{{ message }}</p>
+    }
+
+    <div class="list__table-wrap">
+      <table mat-table [dataSource]="rows()" matSort (matSortChange)="onSort($event)">
+        <ng-container matColumnDef="name">
+          <th mat-header-cell mat-sort-header="name" *matHeaderCellDef>Customer</th>
+          <td mat-cell *matCellDef="let customer">
+            <div class="cell-primary">{{ customer.name }}</div>
+            @if (customer.notes) {
+              <div class="cell-secondary">{{ customer.notes }}</div>
+            }
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="contact">
+          <th mat-header-cell *matHeaderCellDef>Contact</th>
+          <td mat-cell *matCellDef="let customer">
+            <div>{{ customer.email ?? '—' }}</div>
+            <div class="cell-secondary">{{ customer.phone ?? '' }}</div>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="creditLimit">
+          <th mat-header-cell mat-sort-header="creditLimit" *matHeaderCellDef>Credit limit</th>
+          <td mat-cell *matCellDef="let customer">
+            {{ customer.creditLimit | currency: 'USD' : 'symbol' : '1.0-0' }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="status">
+          <th mat-header-cell mat-sort-header="status" *matHeaderCellDef>Status</th>
+          <td mat-cell *matCellDef="let customer">
+            <app-status-chip [tone]="customer.status" />
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef class="cell-actions">Actions</th>
+          <td mat-cell *matCellDef="let customer" class="cell-actions">
+            <button
+              mat-icon-button
+              type="button"
+              [matMenuTriggerFor]="rowMenu"
+              [attr.aria-label]="'Actions for ' + customer.name"
+            >
+              <mat-icon fontSet="material-icons-outlined">more_vert</mat-icon>
+            </button>
+
+            <mat-menu #rowMenu="matMenu">
+              @if (canEdit()) {
+                <button mat-menu-item type="button" (click)="edit(customer)">
+                  <mat-icon fontSet="material-icons-outlined">edit</mat-icon>
+                  <span>Edit</span>
+                </button>
+              }
+              @if (canDelete()) {
+                <button mat-menu-item type="button" (click)="remove(customer)">
+                  <mat-icon fontSet="material-icons-outlined">delete</mat-icon>
+                  <span>Delete</span>
+                </button>
+              }
+            </mat-menu>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns()"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns()"></tr>
+
+        <tr class="mat-row" *matNoDataRow>
+          <td class="list__empty" [attr.colspan]="displayedColumns().length">
+            @if (loading()) {
+              Loading customers…
+            } @else {
+              No customers match these filters.
+            }
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <mat-paginator
+      [length]="total()"
+      [pageIndex]="pageIndex()"
+      [pageSize]="pageSize()"
+      [pageSizeOptions]="[10, 25, 50]"
+      showFirstLastButtons
+      (page)="onPage($event)"
+      aria-label="Select page of customers"
+    />
+  </mat-card>
+</div>

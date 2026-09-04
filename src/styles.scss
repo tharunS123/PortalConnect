@@ -1,0 +1,173 @@
+@use '@angular/material' as mat;
+
+// ---------------------------------------------------------------------------
+// Theme
+//
+// Material 3 tokens generated from a single seed colour, with an explicit dark
+// variant applied via the `.dark-theme` class that ThemeService toggles on
+// <html>. Defining both here means no flash of the wrong palette on load.
+// ---------------------------------------------------------------------------
+
+html {
+  color-scheme: light;
+
+  @include mat.theme(
+    (
+      color: (
+        primary: mat.$azure-palette,
+        tertiary: mat.$blue-palette,
+        theme-type: light,
+      ),
+      typography: Roboto,
+      density: 0,
+    )
+  );
+
+  &.dark-theme {
+    color-scheme: dark;
+
+    @include mat.theme(
+      (
+        color: (
+          primary: mat.$azure-palette,
+          tertiary: mat.$blue-palette,
+          theme-type: dark,
+        ),
+      )
+    );
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Design tokens used by application components
+// ---------------------------------------------------------------------------
+
+:root {
+  --pc-radius-sm: 8px;
+  --pc-radius-md: 14px;
+  --pc-radius-lg: 20px;
+
+  --pc-space-xs: 0.25rem;
+  --pc-space-sm: 0.5rem;
+  --pc-space-md: 1rem;
+  --pc-space-lg: 1.5rem;
+  --pc-space-xl: 2.5rem;
+
+  --pc-shadow-card: 0 1px 2px rgb(0 0 0 / 6%), 0 8px 24px -12px rgb(0 0 0 / 18%);
+  --pc-content-max: 1240px;
+
+  --pc-status-active: #16a34a;
+  --pc-status-inactive: #dc2626;
+  --pc-status-prospect: #d97706;
+}
+
+.dark-theme {
+  --pc-shadow-card: 0 1px 2px rgb(0 0 0 / 40%), 0 8px 24px -12px rgb(0 0 0 / 60%);
+
+  --pc-status-active: #4ade80;
+  --pc-status-inactive: #f87171;
+  --pc-status-prospect: #fbbf24;
+}
+
+// ---------------------------------------------------------------------------
+// Base
+// ---------------------------------------------------------------------------
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family:
+    Roboto,
+    'Helvetica Neue',
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
+  background: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+// Respect users who have asked the OS to reduce motion.
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+// Keyboard focus must stay clearly visible.
+:focus-visible {
+  outline: 2px solid var(--mat-sys-primary);
+  outline-offset: 2px;
+}
+
+// ---------------------------------------------------------------------------
+// Utilities
+// ---------------------------------------------------------------------------
+
+.pc-page {
+  max-width: var(--pc-content-max);
+  margin-inline: auto;
+  padding: var(--pc-space-lg) var(--pc-space-md) var(--pc-space-xl);
+  display: flex;
+  flex-direction: column;
+  gap: var(--pc-space-lg);
+}
+
+.pc-spacer {
+  flex: 1 1 auto;
+}
+
+/** Visible to screen readers only. */
+.pc-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+// ---------------------------------------------------------------------------
+// Snackbar variants used by NotificationService
+// ---------------------------------------------------------------------------
+
+.notification--success {
+  --mdc-snackbar-container-color: #14532d;
+  --mdc-snackbar-supporting-text-color: #dcfce7;
+  --mat-snack-bar-button-color: #bbf7d0;
+}
+
+.notification--error {
+  --mdc-snackbar-container-color: #7f1d1d;
+  --mdc-snackbar-supporting-text-color: #fee2e2;
+  --mat-snack-bar-button-color: #fecaca;
+}
+
+.notification--warning {
+  --mdc-snackbar-container-color: #78350f;
+  --mdc-snackbar-supporting-text-color: #fef3c7;
+  --mat-snack-bar-button-color: #fde68a;
+}
+
+.notification--info {
+  --mdc-snackbar-container-color: #1e3a8a;
+  --mdc-snackbar-supporting-text-color: #dbeafe;
+  --mat-snack-bar-button-color: #bfdbfe;
+}

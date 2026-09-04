@@ -1,0 +1,122 @@
+.auth {
+  display: grid;
+  grid-template-columns: 1fr min(440px, 100%);
+  min-height: 100vh;
+  background: var(--mat-sys-surface-container-lowest);
+}
+
+.auth__theme-toggle {
+  position: fixed;
+  top: var(--pc-space-md);
+  right: var(--pc-space-md);
+  z-index: 2;
+}
+
+// Marketing panel — decorative, so it is the first thing dropped on narrow screens.
+.auth__panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--pc-space-md);
+  padding: var(--pc-space-xl);
+  color: var(--mat-sys-on-primary);
+  background: linear-gradient(140deg, var(--mat-sys-primary), var(--mat-sys-tertiary));
+}
+
+.auth__panel-mark {
+  width: 56px;
+  height: 56px;
+  font-size: 56px;
+}
+
+.auth__panel-title {
+  margin: 0;
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 300;
+  letter-spacing: -0.02em;
+}
+
+.auth__panel-copy {
+  margin: 0;
+  max-width: 34ch;
+  font-size: 1.05rem;
+  opacity: 0.92;
+}
+
+.auth__card {
+  align-self: center;
+  justify-self: center;
+  width: min(400px, calc(100% - 2rem));
+  margin: var(--pc-space-lg) 0;
+  border-radius: var(--pc-radius-lg);
+  overflow: hidden;
+}
+
+.auth__header {
+  padding-top: var(--pc-space-lg);
+}
+
+.auth__error {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--pc-space-sm);
+  margin: 0 0 var(--pc-space-md);
+  padding: var(--pc-space-sm) var(--pc-space-md);
+  border-radius: var(--pc-radius-sm);
+  background: var(--mat-sys-error-container);
+  color: var(--mat-sys-on-error-container);
+  font-size: 0.875rem;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--pc-space-xs);
+}
+
+.auth__submit {
+  margin-top: var(--pc-space-md);
+  height: 44px;
+}
+
+.auth__actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--pc-space-xs);
+  padding: var(--pc-space-md);
+  font-size: 0.875rem;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.auth__hint {
+  margin: calc(var(--pc-space-xs) * -1) 0 var(--pc-space-sm);
+  font-size: 0.75rem;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.auth__requirements {
+  margin: 0 0 var(--pc-space-sm);
+  padding-left: 1.1rem;
+  font-size: 0.75rem;
+  color: var(--mat-sys-on-surface-variant);
+
+  li {
+    margin-block: 2px;
+  }
+
+  li.met {
+    color: var(--pc-status-active);
+    list-style-type: '✓ ';
+  }
+}
+
+@media (max-width: 900px) {
+  .auth {
+    grid-template-columns: 1fr;
+  }
+
+  .auth__panel {
+    display: none;
+  }
+}

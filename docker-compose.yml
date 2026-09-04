@@ -1,0 +1,23 @@
+services:
+  portalconnect:
+    build: .
+    image: portalconnect:latest
+    ports:
+      - '3000:3000'
+    environment:
+      NODE_ENV: production
+      PORT: '3000'
+      DATABASE_PATH: /data/portalconnect.db
+      STATIC_DIR: /app/dist/portal-connect/browser
+      # Generate real values before running this anywhere reachable:
+      #   node -e "console.log(require('crypto').randomBytes(48).toString('base64url'))"
+      JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET:?set JWT_ACCESS_SECRET}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET:?set JWT_REFRESH_SECRET}
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:3000}
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+    volumes:
+      - portalconnect-data:/data
+    restart: unless-stopped
+
+volumes:
+  portalconnect-data:
