@@ -7,8 +7,16 @@ import { runMigrations } from '../src/db/migrate.js';
 import { seed } from '../src/db/seed.js';
 import { hashPassword } from '../src/lib/password.js';
 import { createUser } from '../src/modules/users/users.repository.js';
+import { makeTestPassword } from './setup.js';
 
-export const ADMIN = { username: 'admin', password: 'ChangeMe123!' };
+/**
+ * The seeded administrator. Its password is generated per run in `setup.ts`
+ * and read back from the environment, so no credential literal lives here.
+ */
+export const ADMIN = {
+  username: 'admin',
+  password: process.env['SEED_ADMIN_PASSWORD'] ?? '',
+};
 
 export interface TestContext {
   app: Express;
@@ -74,7 +82,7 @@ export async function createActiveUser(options: {
   role: string;
   password?: string;
 }): Promise<{ id: string; username: string; password: string }> {
-  const password = options.password ?? 'Str0ng!Passw0rd!';
+  const password = options.password ?? makeTestPassword(options.username);
 
   const user = createUser({
     username: options.username,

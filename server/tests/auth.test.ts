@@ -1,14 +1,21 @@
 import { describe, expect, it } from 'vitest';
 import request from 'supertest';
 import { ADMIN, createActiveUser, login, loginAsAdmin, useTestApp } from './helpers.js';
+import { makeTestPassword } from './setup.js';
 
 const ctx = useTestApp();
+
+// Generated rather than written inline: a literal that looks like a credential
+// trips secret scanners even when it is obviously fake.
+const REGISTRATION_PASSWORD = makeTestPassword('register');
+const REPLACEMENT_PASSWORD = makeTestPassword('replacement');
+const WRONG_PASSWORD = makeTestPassword('wrong');
 
 const VALID_REGISTRATION = {
   username: 'newcomer',
   name: 'New Comer',
   email: 'newcomer@example.test',
-  password: 'Str0ng!Passw0rd!',
+  password: REGISTRATION_PASSWORD,
   gender: 'undisclosed',
 };
 
@@ -94,12 +101,12 @@ describe('POST /api/auth/login', () => {
   it('gives the same error for an unknown user and a wrong password', async () => {
     const unknown = await request(ctx.app)
       .post('/api/auth/login')
-      .send({ username: 'ghost', password: 'Str0ng!Passw0rd!' })
+      .send({ username: 'ghost', password: WRONG_PASSWORD })
       .expect(401);
 
     const wrong = await request(ctx.app)
       .post('/api/auth/login')
-      .send({ username: ADMIN.username, password: 'Wr0ng!Passw0rd!' })
+      .send({ username: ADMIN.username, password: WRONG_PASSWORD })
       .expect(401);
 
     // `requestId` is deliberately unique per request, so compare the rest.
@@ -234,7 +241,7 @@ describe('POST /api/auth/change-password', () => {
     await request(ctx.app)
       .post('/api/auth/change-password')
       .set('Authorization', `Bearer ${session.accessToken}`)
-      .send({ currentPassword: user.password, newPassword: 'An0ther!Passw0rd!' })
+      .send({ currentPassword: user.password, newPassword: REPLACEMENT_PASSWORD })
       .expect(204);
 
     await request(ctx.app)
@@ -242,7 +249,7 @@ describe('POST /api/auth/change-password', () => {
       .set('Cookie', session.refreshCookie)
       .expect(401);
 
-    await login(ctx.app, user.username, 'An0ther!Passw0rd!');
+    await login(ctx.app, user.username, REPLACEMENT_PASSWORD);
   });
 
   it('refuses when the current password is wrong', async () => {
@@ -252,7 +259,7 @@ describe('POST /api/auth/change-password', () => {
     await request(ctx.app)
       .post('/api/auth/change-password')
       .set('Authorization', `Bearer ${session.accessToken}`)
-      .send({ currentPassword: 'Not!TheP4ssword', newPassword: 'An0ther!Passw0rd!' })
+      .send({ currentPassword: WRONG_PASSWORD, newPassword: REPLACEMENT_PASSWORD })
       .expect(401);
   });
 });

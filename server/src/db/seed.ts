@@ -78,6 +78,11 @@ const DEMO_CUSTOMERS = [
   },
 ];
 
+/** A random password that satisfies the server's own policy. */
+function generateAdminPassword(): string {
+  return `Aa1!${crypto.randomBytes(15).toString('base64url')}`;
+}
+
 export async function seed(db: Db = getDb()): Promise<void> {
   runMigrations(db);
 
@@ -110,7 +115,18 @@ export async function seed(db: Db = getDb()): Promise<void> {
     .get(env.SEED_ADMIN_USERNAME);
 
   if (!adminExists) {
-    const passwordHash = await hashPassword(env.SEED_ADMIN_PASSWORD);
+    const password = env.SEED_ADMIN_PASSWORD ?? generateAdminPassword();
+    const passwordHash = await hashPassword(password);
+
+    if (!env.SEED_ADMIN_PASSWORD) {
+      // Printed once, at creation, and only stored as a bcrypt hash — this line
+      // is the only chance to capture it. It goes in the message rather than the
+      // log object because the logger redacts password-shaped fields.
+      logger.warn(
+        `SEED_ADMIN_PASSWORD was not set. Generated one for "${env.SEED_ADMIN_USERNAME}": ${password} — record it now, it is not recoverable.`,
+      );
+    }
+
     db.prepare(
       `
       INSERT INTO users (id, username, name, email, password_hash, gender, role_code, is_active)

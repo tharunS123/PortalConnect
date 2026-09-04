@@ -20,7 +20,9 @@ npm run dev
 - Web app: <http://localhost:4200> (proxies `/api` to the API)
 - API: <http://localhost:3000>
 
-Sign in with the seeded administrator — username `admin`, password `ChangeMe123!`. **Change it before exposing this anywhere.**
+`db:seed` creates the `admin` account. Set `SEED_ADMIN_PASSWORD` in `.env` first, or leave it
+blank and the seed generates a random password and prints it once — it is stored only as a
+bcrypt hash, so capture it from that line.
 
 ---
 

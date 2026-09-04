@@ -51,7 +51,13 @@ const envSchema = z
 
     SEED_ADMIN_USERNAME: z.string().min(3).default('admin'),
     SEED_ADMIN_EMAIL: z.email().default('admin@portalconnect.local'),
-    SEED_ADMIN_PASSWORD: z.string().min(8).default('ChangeMe123!'),
+    // Deliberately no default — an unset value makes the seed generate a
+    // random password and print it once, rather than install a known one.
+    // A blank entry in `.env` counts as unset, so `SEED_ADMIN_PASSWORD=` works.
+    SEED_ADMIN_PASSWORD: z.preprocess(
+      (value) => (value === '' ? undefined : value),
+      z.string().min(12).optional(),
+    ),
   })
   .superRefine((value, ctx) => {
     // Development gets throwaway defaults; production must supply real secrets.
